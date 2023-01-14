@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
-import loginReducer, { ILoginReducer } from './login-reducer';
-import refreshTokenReducer, { IRefreshTokenReducer } from './refresh-token-reducer';
+import authReducer, { IAuthReducer } from './auth-reducer';
 
 export interface IReducers {
-  loginReducer: ILoginReducer,
-  refreshTokenReducer: IRefreshTokenReducer,
+  authReducer: IAuthReducer
 }
 
-const rootReducer = combineReducers({ loginReducer, refreshTokenReducer });
+const rootReducer = combineReducers({ authReducer });
 
 export default rootReducer;

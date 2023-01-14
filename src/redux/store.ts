@@ -6,7 +6,7 @@ import { configureStore } from '@reduxjs/toolkit'
 const persistConfig = {
   key: 'primary',
   storage,
-  whitelist: ['loginReducer']
+  whitelist: ['authReducer']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

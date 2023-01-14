@@ -8,7 +8,7 @@ const LoginPageTemplate = dynamic(() => import('Components/templates/login-page'
 
 const LoginPage = () => {
   const router = useRouter()
-  const isLogin = useAppSelector((state: IReducers) => state.loginReducer.isLogin)
+  const isLogin = useAppSelector((state: IReducers) => state.authReducer.isLogin)
   React.useEffect(() => {
     if (isLogin) router.replace('/', undefined, { shallow: true })
   }, [isLogin]);

@@ -14,7 +14,7 @@ const LoginFormSection = () => {
   const { ctx, setCtx } = React.useContext(LoginFormCtx)
   const router = useRouter();
   const dispatch = useAppDispatch()
-  const isLogin = useAppSelector((state: IReducers) => state.loginReducer.isLogin)
+  const isLogin = useAppSelector((state: IReducers) => state.authReducer.isLogin)
 
   const submitForm = React.useCallback((username?: string, password?: string) => {
     if (username && password) dispatch(requestLogin({ username, password }))

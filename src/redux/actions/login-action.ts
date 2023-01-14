@@ -1,22 +1,32 @@
-import axios from 'axios';
 import { Dispatch } from 'redux';
 import { IReduxActionResponse } from 'helpers/redux-helper';
+import { IAuthReducer } from 'Redux/reducers/auth-reducer';
+import { axiosHelper } from 'helpers/axios-helper';
 
 export enum LOGIN_ACTIONS {
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  FAIL = 'FAIL'
+  LOADING = 'LOGIN_LOADING',
+  SUCCESS = 'LOGIN_SUCCESS',
+  FAIL = 'LOGIN_FAIL'
 }
 
 export enum LOGOUT_ACTIONS {
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  FAIL = 'FAIL'
+  LOADING = 'LOGOUT_LOADING',
+  SUCCESS = 'LOGOUT_SUCCESS',
+  FAIL = 'LOGOUT_FAIL'
+}
+
+export enum REFRESH_TOKEN {
+  LOADING = 'REFRESH_TOKEN_LOADING',
+  SUCCESS = 'REFRESH_TOKEN_SUCCESS',
+  FAIL = 'REFRESH_TOKEN_FAIL'
 }
 
 export interface IRequestLogin {
   username: string;
   password: string;
+}
+export interface IRequestRefreshToken {
+  refresh_token: string;
 }
 
 export const loginBegin = (): IReduxActionResponse => ({
@@ -33,57 +43,86 @@ export const loginFailed = (message: string): IReduxActionResponse => ({
   message
 })
 
-export const logoutBegin = (): IReduxActionResponse => ({
-  type: LOGOUT_ACTIONS.LOADING
-});
-
 export const logoutSuccess = (): IReduxActionResponse => ({
   type: LOGOUT_ACTIONS.SUCCESS
 });
 
-export const logoutFailed = (message: string): IReduxActionResponse => ({
-  type: LOGOUT_ACTIONS.FAIL,
+export const refreshTokenBegin = (): IReduxActionResponse => ({
+  type: REFRESH_TOKEN.LOADING
+});
+
+export const refreshTokenSuccess = (data: Record<string, string>): IReduxActionResponse => ({
+  type: REFRESH_TOKEN.SUCCESS,
+  data
+});
+
+export const refreshTokenFailed = (message: string): IReduxActionResponse => ({
+  type: REFRESH_TOKEN.FAIL,
   message
 })
 
+
 export const requestLogin = (data: IRequestLogin) => async (dispatch: Dispatch<any>) => {
-  dispatch(loginBegin())
   try {
+    dispatch(loginBegin())
     const bodyFormData = new FormData()
     bodyFormData.append('username', data.username)
     bodyFormData.append('password', data.password)
-    await axios.post(
-      'http://127.0.0.1:5000/v1/auth/login',
-      bodyFormData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' }
+    const request = axiosHelper.createRequest({
+      method: 'POST',
+      url: '/v1/auth/login',
+      data: bodyFormData,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 100000,
+      withCredentials: true
+    })
+    await axiosHelper.runRequest(request)
+      .then((res) => {
+        dispatch(loginSuccess({ access_token: res.data.data.access_token, userData: res.data.data.data }))
       })
-      .then(async (res) => {
-        const refreshTokenBodyFormData = new FormData()
-        refreshTokenBodyFormData.append('refresh_token', res.data.data.refresh_token)
-        await axios.post(
-          'http://127.0.0.1:5000/v1/auth/refresh-token',
-          refreshTokenBodyFormData,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' }
-          }
-        ).then((refreshTokenRes) => {
-          dispatch(loginSuccess({ access_token: refreshTokenRes.data.data.access_token, refresh_token: refreshTokenRes.data.data.refresh_token }))
-        })
+      .catch((err) => {
+        throw new Error(err.response.data.message)
       })
   } catch (err: any) {
-    dispatch(loginFailed(err.response.data.message))
+    console.error(err)
+    dispatch(loginFailed(err.message))
   }
 };
 
-export const requestLogout = () => async (dispatch: Dispatch<any>) => {
-  dispatch(logoutBegin())
+export const requestLogout = (accessToken: IAuthReducer['accessToken']) => async (dispatch: Dispatch<any>) => {
   try {
-    // TODO: add logout api on backend
-    dispatch(logoutSuccess())
+    const request = axiosHelper.createRequest({
+      method: 'POST',
+      url: '/v1/auth/logout',
+      headers: { 'Authorization': 'Bearer ' + accessToken },
+      timeout: 100000,
+      withCredentials: true
+    })
+    await axiosHelper.runRequest(request)
+      .then(() => dispatch(logoutSuccess()))
+      .catch((err) => { throw new Error(err.response.data.message) })
   } catch (err: any) {
-    dispatch(logoutFailed('ok'))
+    return console.error(err)
   }
 }
 
-export default () => ({ requestLogin, requestLogout })
+
+export const requestRefreshToken = () => async (dispatch: Dispatch<any>) => {
+  dispatch(refreshTokenBegin())
+  try {
+    const request = axiosHelper.createRequest({
+      method: 'POST',
+      url: '/v1/auth/refresh-token',
+      timeout: 100000,
+      withCredentials: true
+    })
+    await axiosHelper.runRequest(request)
+      .then((res) => dispatch(refreshTokenSuccess({ access_token: res.data.data.access_token })))
+      .catch((err) => { throw new Error(err.response.data.message) })
+  } catch (err: any) {
+    console.error(err)
+    return dispatch(refreshTokenFailed(err.message))
+  }
+};
+
+export default () => ({ requestLogin, requestLogout, requestRefreshToken })
