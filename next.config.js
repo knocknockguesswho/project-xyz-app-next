@@ -1,9 +1,9 @@
+const webpack = require('webpack');
+require("dotenv").config();
+
 module.exports = {
-  future: {
-    webpack5: true,
-  },
-  i18n: {
-    locales: ['en-US'],
-    defaultLocale: 'en-US'
+  webpack: config => {
+    config.plugins.push(new webpack.EnvironmentPlugin(process.env))
+    return config
   }
-};
+}
