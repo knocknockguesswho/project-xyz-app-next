@@ -6,14 +6,15 @@ import { IReducers } from 'Redux/reducers';
 
 const HomePage = () => {
   const dispatch = useAppDispatch()
-  const loginData = useAppSelector((state: IReducers) => state.authReducer)
+  const loginData = useAppSelector((state: IReducers) => state.authReducer)// TODO: need to move to header
   return (
     <div className='flex flex-col space-y-8'>
       <span>HomePage</span>
       <div className='flex flex-row items-center space-x-4'>
+        {/*TODO: need to move to header*/}
         {loginData.isLogin
           ? <>
-            <button onClick={() => dispatch(requestLogout(loginData.accessToken))}>
+            <button onClick={() => dispatch(requestLogout())}>
               Logout
             </button>
           </>
@@ -24,6 +25,7 @@ const HomePage = () => {
           </>
         }
       </div>
+      <div>list</div>
     </div>
   )
 }

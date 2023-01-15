@@ -69,12 +69,11 @@ export const requestLogin = (data: IRequestLogin) => async (dispatch: Dispatch<a
   }
 };
 
-export const requestLogout = (accessToken: IAuthReducer['accessToken']) => async (dispatch: Dispatch<any>) => {
+export const requestLogout = () => async (dispatch: Dispatch<any>) => {
   try {
     const request = axiosHelper.createRequest({
       method: 'POST',
       url: '/v1/auth/logout',
-      headers: { 'Authorization': 'Bearer ' + accessToken },
       timeout: 100000,
       withCredentials: true
     })

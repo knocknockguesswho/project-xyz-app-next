@@ -1,3 +1,4 @@
+import { REFRESH_TOKEN } from 'helpers/axios-helper';
 import { IReduxActionResponse } from 'helpers/redux-helper';
 import { Reducer } from 'redux';
 import { LOGIN_ACTIONS, LOGOUT_ACTIONS } from 'Redux/actions/login-action';
@@ -36,6 +37,8 @@ const authReducer: Reducer = (state: IAuthReducer = initialState, action: IRedux
       return { accessToken: action.data.access_token, userData: action.data.userData, isLoading: false, isLogin: true };
     case LOGOUT_ACTIONS.SUCCESS:
       return initialState
+    case REFRESH_TOKEN.SUCCESS:
+      return { ...state, accessToken: action.data.access_token }
     default:
       return state;
   }
