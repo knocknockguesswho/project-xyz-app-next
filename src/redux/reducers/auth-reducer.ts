@@ -1,6 +1,6 @@
 import { IReduxActionResponse } from 'helpers/redux-helper';
 import { Reducer } from 'redux';
-import { LOGIN_ACTIONS, LOGOUT_ACTIONS, REFRESH_TOKEN } from 'Redux/actions/login-action';
+import { LOGIN_ACTIONS, LOGOUT_ACTIONS } from 'Redux/actions/login-action';
 
 export interface IUserData {
   age: number;
@@ -36,12 +36,6 @@ const authReducer: Reducer = (state: IAuthReducer = initialState, action: IRedux
       return { accessToken: action.data.access_token, userData: action.data.userData, isLoading: false, isLogin: true };
     case LOGOUT_ACTIONS.SUCCESS:
       return initialState
-    case REFRESH_TOKEN.LOADING:
-      return { ...state, isLoading: true };
-    case REFRESH_TOKEN.SUCCESS:
-      return { ...state, accessToken: action.data.access_token, isLoading: false };
-    case REFRESH_TOKEN.FAIL:
-      return { ...state, isLoading: false, message: action.message };
     default:
       return state;
   }

@@ -15,12 +15,6 @@ export enum LOGOUT_ACTIONS {
   FAIL = 'LOGOUT_FAIL'
 }
 
-export enum REFRESH_TOKEN {
-  LOADING = 'REFRESH_TOKEN_LOADING',
-  SUCCESS = 'REFRESH_TOKEN_SUCCESS',
-  FAIL = 'REFRESH_TOKEN_FAIL'
-}
-
 export interface IRequestLogin {
   username: string;
   password: string;
@@ -46,20 +40,6 @@ export const loginFailed = (message: string): IReduxActionResponse => ({
 export const logoutSuccess = (): IReduxActionResponse => ({
   type: LOGOUT_ACTIONS.SUCCESS
 });
-
-export const refreshTokenBegin = (): IReduxActionResponse => ({
-  type: REFRESH_TOKEN.LOADING
-});
-
-export const refreshTokenSuccess = (data: Record<string, string>): IReduxActionResponse => ({
-  type: REFRESH_TOKEN.SUCCESS,
-  data
-});
-
-export const refreshTokenFailed = (message: string): IReduxActionResponse => ({
-  type: REFRESH_TOKEN.FAIL,
-  message
-})
 
 
 export const requestLogin = (data: IRequestLogin) => async (dispatch: Dispatch<any>) => {
@@ -100,29 +80,10 @@ export const requestLogout = (accessToken: IAuthReducer['accessToken']) => async
     })
     await axiosHelper.runRequest(request)
       .then(() => dispatch(logoutSuccess()))
-      .catch((err) => { throw new Error(err.response.data.message) })
+      .catch((err) => { throw new Error(err) })
   } catch (err: any) {
-    return console.error(err)
+    return console.error({ err })
   }
 }
 
-
-export const requestRefreshToken = () => async (dispatch: Dispatch<any>) => {
-  dispatch(refreshTokenBegin())
-  try {
-    const request = axiosHelper.createRequest({
-      method: 'POST',
-      url: '/v1/auth/refresh-token',
-      timeout: 100000,
-      withCredentials: true
-    })
-    await axiosHelper.runRequest(request)
-      .then((res) => dispatch(refreshTokenSuccess({ access_token: res.data.data.access_token })))
-      .catch((err) => { throw new Error(err.response.data.message) })
-  } catch (err: any) {
-    console.error(err)
-    return dispatch(refreshTokenFailed(err.message))
-  }
-};
-
-export default () => ({ requestLogin, requestLogout, requestRefreshToken })
+export default () => ({ requestLogin, requestLogout })
