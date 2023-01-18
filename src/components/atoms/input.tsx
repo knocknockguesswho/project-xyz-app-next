@@ -8,6 +8,7 @@ export interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 const Input = (props: IProps) => {
   const { label, rightButton, ...args } = props
+  const inputRef: React.LegacyRef<HTMLInputElement> = React.useRef(null)
   const [isFocus, setIsFocus] = React.useState(false)
   return (
     <div className='w-full flex flex-col relative'>
@@ -15,12 +16,13 @@ const Input = (props: IProps) => {
         htmlFor={props.id}
         className={[
           'px-1 py-px absolute bg-white text-blue left-1',
-          isFocus ? 'top-0 -translate-y-[14px] opacity-100 transition-all duration-300' : 'top-1/2 -translate-y-1/2 opacity-0 -z-10'
+          isFocus || (!!inputRef.current && inputRef.current?.value.length > 0) ? 'top-0 -translate-y-[14px] opacity-100 transition-all duration-300' : 'top-1/2 -translate-y-1/2 opacity-0 -z-10'
         ].join(' ').trim()}>
         {label}
       </label>
       <input
         {...args}
+        ref={inputRef}
         placeholder={isFocus ? '' : props.placeholder}
         className={['w-full p-2 border rounded-sm pr-16', props.className].join(' ').trim()}
         onFocus={(e) => {
