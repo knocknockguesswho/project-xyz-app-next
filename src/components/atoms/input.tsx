@@ -4,7 +4,6 @@ export interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   rightButton?: React.ReactElement;
   withShowButton?: boolean;
-  onShownButtonClick?: () => void;
 }
 const Input = (props: IProps) => {
   const { label, rightButton, ...args } = props
