@@ -8,11 +8,11 @@ const LoginPageTemplate = dynamic(() => import('Components/templates/login-page'
 
 const LoginPage = () => {
   const router = useRouter()
-  const isLogin = useAppSelector((state: IReducers) => state.authReducer.isLogin)
+  const loginData = useAppSelector((state: IReducers) => state.authReducer)
   React.useEffect(() => {
-    if (isLogin) router.replace('/', undefined, { shallow: true })
-  }, [isLogin]);
-  return !isLogin ? (
+    if (loginData.isLogin) router.replace('/' + loginData.userData?.username, undefined, { shallow: true })
+  }, [loginData.isLogin]);
+  return !loginData.isLogin ? (
     <div id='home-page'>
       <LoginPageTemplate />
     </div>
