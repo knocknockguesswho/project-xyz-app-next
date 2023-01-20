@@ -11,6 +11,12 @@
     @apply outline-none;
   }
 
+  table,
+  th,
+  td {
+    @apply border border-black p-1;
+  }
+
   @keyframes appear {
     from {
       opacity: 0;

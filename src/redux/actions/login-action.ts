@@ -45,14 +45,11 @@ export const logoutSuccess = (): IReduxActionResponse => ({
 export const requestLogin = (data: IRequestLogin) => async (dispatch: Dispatch<any>) => {
   try {
     dispatch(loginBegin())
-    const bodyFormData = new FormData()
-    bodyFormData.append('username', data.username)
-    bodyFormData.append('password', data.password)
     const request = axiosHelper.createRequest({
       method: 'POST',
       url: '/v1/auth/login',
-      data: bodyFormData,
-      headers: { 'Content-Type': 'multipart/form-data' },
+      data: data,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       timeout: 100000,
       withCredentials: true
     })
