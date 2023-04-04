@@ -7,8 +7,13 @@
     @apply font-primary min-h-screen min-w-full;
   }
 
+  input:focus {
+    @apply border border-blue outline-none;
+  }
+
   button:focus {
     @apply outline-none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   table,

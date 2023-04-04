@@ -22,23 +22,25 @@ export interface IAuthReducer {
   message?: string;
   userData?: IUserData;
 }
+export interface IAuthActionData extends Pick<IAuthReducer, 'accessToken' | 'userData' | 'accessToken'> { }
 
 const initialState: IAuthReducer = {
-  isLogin: false
+  isLoading: true,
+  isLogin: false,
 };
 
-const authReducer: Reducer = (state: IAuthReducer = initialState, action: IReduxActionResponse): IAuthReducer => {
+const authReducer: Reducer = (state: IAuthReducer = initialState, action: IReduxActionResponse<IAuthActionData>): IAuthReducer => {
   switch (action.type) {
     case LOGIN_ACTIONS.LOADING:
       return { isLoading: true, isLogin: false };
     case LOGIN_ACTIONS.FAIL:
       return { isLoading: false, isLogin: false, message: action.message };
     case LOGIN_ACTIONS.SUCCESS:
-      return { accessToken: action.data.access_token, userData: action.data.userData, isLoading: false, isLogin: true };
+      return { accessToken: action.data?.accessToken, userData: action.data?.userData, isLoading: false, isLogin: true };
     case LOGOUT_ACTIONS.SUCCESS:
-      return initialState
+      return { isLoading: false, isLogin: false };
     case REFRESH_TOKEN.SUCCESS:
-      return { ...state, accessToken: action.data.access_token }
+      return { ...state, isLoading: false, accessToken: action.data?.accessToken };
     default:
       return state;
   }

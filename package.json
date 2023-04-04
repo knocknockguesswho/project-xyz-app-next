@@ -12,7 +12,8 @@
     "dev": "next dev -p 8000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "npx rimraf .next"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",

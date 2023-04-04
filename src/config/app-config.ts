@@ -1,5 +1,5 @@
 const appConfig = {
-  apiUrl: process.env.API_URL || ''
-}
+  apiUrl: process.env.API_URL || '',
+};
 
 export { appConfig };

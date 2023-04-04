@@ -14,10 +14,10 @@ function TegamiApp(props: AppProps) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Head>
-          <meta name="google" content="notranslate" />
+          <meta name='google' content='notranslate' />
           <title>Project XYZ</title>
-          <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet" />
-          <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Sacramento&display=swap" rel="stylesheet" />
+          <link href='https://fonts.googleapis.com/css2?family=Sacramento&display=swap' rel='stylesheet' />
+          <link href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Sacramento&display=swap' rel='stylesheet' />
         </Head>
         <Component {...pageProps} />
       </PersistGate>

@@ -1,10 +1,10 @@
-import React from 'react'
-import Input, { IProps as IInputProps } from 'Components/atoms/input'
+import React from 'react';
+import Input, { IProps as IInputProps } from 'Components/atoms/input';
 
-const InputPassword = (props: Omit<IInputProps, 'type'>) => {
+const InputText = (props: IInputProps) => {
   return (
-    <Input {...props} type='text' />
-  )
-}
+    <Input {...props} />
+  );
+};
 
-export default InputPassword
+export default InputText;

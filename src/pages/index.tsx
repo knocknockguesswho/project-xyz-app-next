@@ -1,12 +1,12 @@
-import React from 'react'
+import React from 'react';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from 'helpers/redux-helper';
 import { requestLogout } from 'Redux/actions/login-action';
 import { IReducers } from 'Redux/reducers';
 
 const HomePage = () => {
-  const dispatch = useAppDispatch()
-  const loginData = useAppSelector((state: IReducers) => state.authReducer)// TODO: need to move to header
+  const dispatch = useAppDispatch();
+  const loginData = useAppSelector((state: IReducers) => state.authReducer);// TODO: need to move to header
   return (
     <div className='flex flex-col space-y-8'>
       <span>HomePage</span>
@@ -25,9 +25,8 @@ const HomePage = () => {
           </>
         }
       </div>
-      <div>list</div>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

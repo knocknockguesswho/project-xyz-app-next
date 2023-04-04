@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 type TDividerVariant = 'normal' | 'thick'
 export interface IProps extends React.HTMLAttributes<HTMLHRElement> {
@@ -11,10 +11,10 @@ const Divider = (props: IProps) => {
       {...args}
       className={[
         'w-full bg-mild',
-        variant === 'normal' ? 'h-px' : 'h-2'
+        variant === 'normal' ? 'h-px' : 'h-2',
       ].join(' ').trim()}
     />
-  )
-}
+  );
+};
 
-export default Divider
+export default Divider;

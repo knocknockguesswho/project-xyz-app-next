@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { IReduxActionResponse } from 'helpers/redux-helper';
-import { IAuthReducer } from 'Redux/reducers/auth-reducer';
+import { IAuthActionData } from 'Redux/reducers/auth-reducer';
 import { axiosHelper } from 'helpers/axios-helper';
 
 export enum LOGIN_ACTIONS {
@@ -23,46 +23,45 @@ export interface IRequestRefreshToken {
   refresh_token: string;
 }
 
-export const loginBegin = (): IReduxActionResponse => ({
-  type: LOGIN_ACTIONS.LOADING
+export const loginBegin = (): IReduxActionResponse<undefined> => ({
+  type: LOGIN_ACTIONS.LOADING,
 });
 
-export const loginSuccess = (data: Record<string, string | undefined>): IReduxActionResponse => ({
+export const loginSuccess = (data: IAuthActionData): IReduxActionResponse<IAuthActionData> => ({
   type: LOGIN_ACTIONS.SUCCESS,
-  data
+  data,
 });
 
-export const loginFailed = (message: string): IReduxActionResponse => ({
+export const loginFailed = (message: string): IReduxActionResponse<undefined> => ({
   type: LOGIN_ACTIONS.FAIL,
-  message
-})
-
-export const logoutSuccess = (): IReduxActionResponse => ({
-  type: LOGOUT_ACTIONS.SUCCESS
+  message,
 });
 
+export const logoutSuccess = (): IReduxActionResponse<undefined> => ({
+  type: LOGOUT_ACTIONS.SUCCESS,
+});
 
 export const requestLogin = (data: IRequestLogin) => async (dispatch: Dispatch<any>) => {
   try {
-    dispatch(loginBegin())
+    dispatch(loginBegin());
     const request = axiosHelper.createRequest({
       method: 'POST',
       url: '/v1/auth/login',
       data: data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       timeout: 100000,
-      withCredentials: true
-    })
+      withCredentials: true,
+    });
     await axiosHelper.runRequest(request)
       .then((res) => {
-        dispatch(loginSuccess({ access_token: res.data.data.access_token, userData: res.data.data.data }))
+        dispatch(loginSuccess({ accessToken: res.data.data.access_token, userData: res.data.data.data }));
       })
       .catch((err) => {
-        throw new Error(err.response.data.message)
-      })
+        throw new Error(err.response.data.message);
+      });
   } catch (err: any) {
-    console.error(err)
-    dispatch(loginFailed(err.message))
+    console.error(err);
+    dispatch(loginFailed(err.message));
   }
 };
 
@@ -72,14 +71,14 @@ export const requestLogout = () => async (dispatch: Dispatch<any>) => {
       method: 'POST',
       url: '/v1/auth/logout',
       timeout: 100000,
-      withCredentials: true
-    })
+      withCredentials: true,
+    });
     await axiosHelper.runRequest(request)
       .then(() => dispatch(logoutSuccess()))
-      .catch((err) => { throw new Error(err) })
+      .catch((err) => { throw new Error(err); });
   } catch (err: any) {
-    return console.error({ err })
+    return console.error({ err });
   }
-}
+};
 
-export default () => ({ requestLogin, requestLogout })
+export default () => ({ requestLogin, requestLogout });
